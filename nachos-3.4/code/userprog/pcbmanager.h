@@ -3,25 +3,26 @@
 
 #include "bitmap.h"
 #include "pcb.h"
+#include "synch.h"
 
 class PCB;
 
-class PCBManager {
+class PCBManager
+{
 
-    public:
-        PCBManager(int maxProcesses);
-        ~PCBManager();
+public:
+    PCBManager(int maxProcesses);
+    ~PCBManager();
 
-        PCB* AllocatePCB();
-        int DeallocatePCB(PCB* pcb);
-        PCB* GetPCB(int pid);
+    PCB *AllocatePCB();
+    int DeallocatePCB(PCB *pcb);
+    PCB *GetPCB(int pid);
 
-    private:
-        BitMap* bitmap;
-        PCB** pcbs;
-        // Need a lock here
-        // Lock* pcbManagerLock;
-
+private:
+    BitMap *bitmap;
+    PCB **pcbs;
+    // Need a lock here
+    Lock *pcbManagerLock;
 };
 
 #endif // PCBMANAGER_H
