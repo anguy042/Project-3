@@ -228,6 +228,8 @@ int doKill(int pid)
     PCB *joinPCB = pcbManager->GetPCB(pid);
     if (pcb == NULL)
     {
+        ////printing the line for when its unsuccessful
+        printf("Process [%d] cannot kill process [%d]: doesn't exist\n", currentThread->space->pcb->pid, pid);
         return -1;
     }
 
@@ -246,6 +248,9 @@ int doKill(int pid)
 
     // 4. Set thread to be destroyed.
     scheduler->RemoveThread(targetThread);
+
+    //printing the line for when process is killed
+    printf("Process [%d] killed process [%d]\n", currentThread->space->pcb->pid, pid);
 
     // 5. return 0 for success!
     return 0;
