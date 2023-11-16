@@ -25,7 +25,7 @@
 #include "system.h"
 #include "syscall.h"
 #include "system.h"
-
+class pcb;
 //----------------------------------------------------------------------
 // ExceptionHandler
 // 	Entry point into the Nachos kernel.  Called when a user program
@@ -208,7 +208,7 @@ int doJoin(int pid)
     }
 
     // 3. Yield until joinPCB has not exited
-    while (!joinPCB->hasExited)
+    while (!joinPCB->HasExited)
     {
         currentThread->Yield();
     }
