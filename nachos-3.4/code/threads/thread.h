@@ -45,6 +45,7 @@
 #include "addrspace.h"
 #endif
 
+class AddrSpace; 
 // CPU register state to be saved on context switch.  
 // The SPARC and MIPS only need 10 registers, but the Snake needs 18.
 // For simplicity, this is just the max over all architectures.
