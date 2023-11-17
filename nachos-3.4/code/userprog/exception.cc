@@ -194,7 +194,7 @@ int doJoin(int pid)
 
     // 1. Check if this is a valid pid and return -1 if not
     PCB *joinPCB = pcbManager->GetPCB(pid);
-    if (pcb == NULL)
+    if (pid <= 0)
     {
         return -1;
     }
@@ -208,7 +208,7 @@ int doJoin(int pid)
     }
 
     // 3. Yield until joinPCB has not exited
-    while (!joinPCB->HasExited)
+    while (!joinPCB->HasExited())
     {
         currentThread->Yield();
     }
@@ -226,7 +226,7 @@ int doKill(int pid)
 
     // 1. Check if the pid is valid and if not, return -1
     PCB *joinPCB = pcbManager->GetPCB(pid);
-    if (pcb == NULL)
+    if (pid <=0)
     {
         ////printing the line for when its unsuccessful
         printf("Process [%d] cannot kill process [%d]: doesn't exist\n", currentThread->space->pcb->pid, pid);
