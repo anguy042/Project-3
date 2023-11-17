@@ -139,6 +139,7 @@ int doFork(int functionAddr)
     // childThread->Fork(childFunction, pcb->pid)
 
     // 9. return pcb->pid;
+    return 0;
 }
 
 int doExec(char *filename)
