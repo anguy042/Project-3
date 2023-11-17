@@ -223,10 +223,11 @@ int doJoin(int pid)
 
 int doKill(int pid)
 {
+    printf("System Call: [%d] invoked [Kill]\n", currentThread->space->pcb->pid);
 
     // 1. Check if the pid is valid and if not, return -1
-    PCB *joinPCB = pcbManager->GetPCB(pid);
-    if (pid <=0)
+    PCB *targetPCB = pcbManager->GetPCB(pid);
+    if (targetPCB == nullptr)
     {
         ////printing the line for when its unsuccessful
         printf("Process [%d] cannot kill process [%d]: doesn't exist\n", currentThread->space->pcb->pid, pid);
@@ -234,7 +235,7 @@ int doKill(int pid)
     }
 
     // 2. IF pid is self, then just exit the process
-    if (pcb == currentThread->space->pcb)
+    if (targetPCB->thread == currentThread)
     {
         doExit(0);
         return 0;
@@ -244,10 +245,10 @@ int doKill(int pid)
     // However, change references from currentThread to the target thread
     // pcb->thread is the target thread
 
-    Thread *targetThread = pcb->thread;
 
     // 4. Set thread to be destroyed.
-    scheduler->RemoveThread(targetThread);
+    scheduler->RemoveThread(targetThread->thread);
+    currentThread->Yield();
 
     //printing the line for when process is killed
     printf("Process [%d] killed process [%d]\n", currentThread->space->pcb->pid, pid);
