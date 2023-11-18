@@ -248,7 +248,7 @@ int doKill(int pid)
 
 
     // 4. Set thread to be destroyed.
-    scheduler->RemoveThread(targetThread->thread);
+    scheduler->RemoveThread(targetPCB->thread);
     currentThread->Yield();
 
     //printing the line for when process is killed
