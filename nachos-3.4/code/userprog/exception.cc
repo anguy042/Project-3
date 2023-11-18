@@ -105,16 +105,35 @@ void childFunction(int pid)
 int doFork(int functionAddr)
 {
 
+    //KH Addition: Working on implementing Fork(). So working on this whole
+    // area. 11.16.23
+    printf("\nInside doFork()!\n");
+
     // 1. Check if sufficient memory exists to create new process
     // currentThread->space->GetNumPages() <= mm->GetFreePageCount()
     // if check fails, return -1
+    int currPID = currentThread->space->pcb->pid;
+    int needed = currentThread->space->GetNumPages();
+    printf("Parent thread id: %d has %d pages\n", currPID, needed);
+    int avail = mm->GetFreePageCount();
+    printf("Machine has %d free pages.\n", avail);
+    if(needed > avail){
+        printf("Not enough memory available. Returning -1.\n");
+        return -1;
+    }
+    printf("Enough memory available!\n");
 
     // 2. SaveUserState for the parent thread
     // currentThread->SaveUserState();
+    currentThread->SaveUserState();
+    printf("Parent registers saved!\n");
 
     // 3. Create a new address space for child by copying parent address space
     // Parent: currentThread->space
     // childAddrSpace: new AddrSpace(currentThread->space)
+    AddrSpace *childAddrSpace;
+    childAddrSpace = new AddrSpace(currentThread->space);
+    printf("Child AddrSpace created!\n");
 
     // 4. Create a new thread for the child and set its addrSpace
     // childThread = new Thread("childThread")
@@ -325,6 +344,8 @@ void ExceptionHandler(ExceptionType which)
     }
     else if ((which == SyscallException) && (type == SC_Fork))
     {
+        //KH Addition: adding printout for testing setup. 
+        printf("\n\nInside Fork option! Added by Kristy\n\n");
         int ret = doFork(machine->ReadRegister(4));
         machine->WriteRegister(2, ret);
         incrementPC();
