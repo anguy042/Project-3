@@ -35,7 +35,8 @@ CPP = gcc -m32 -E
 INCDIR =-I../userprog -I../threads
 CFLAGS = -G 0 -c $(INCDIR)
 
-all: create exit halt shell matmult sort
+#KH Addition: adding fork_testing:
+all: create exit halt shell matmult sort fork_testing
 
 start.o: start.s ../userprog/syscall.h
 	$(CPP) $(CPPFLAGS) start.c > strt.s
@@ -77,3 +78,11 @@ matmult.o: matmult.c
 matmult: matmult.o start.o
 	$(LD) $(LDFLAGS) start.o matmult.o -o matmult.coff
 	../bin/coff2noff matmult.coff matmult
+
+#KH Addition: Adding fork_testing by copying/pasting halt
+# and changing halt to fork_testing.
+fork_testing.o: fork_testing.c
+	$(CC) $(CFLAGS) -c fork_testing.c
+fork_testing: fork_testing.o start.o
+	$(LD) $(LDFLAGS) start.o fork_testing.o -o fork_testing.coff
+	../bin/coff2noff fork_testing.coff fork_testing
