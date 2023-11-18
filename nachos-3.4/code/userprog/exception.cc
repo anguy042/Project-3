@@ -25,6 +25,8 @@
 #include "system.h"
 #include "syscall.h"
 #include "system.h"
+//KH Addition
+#include "pcb.h"
 class pcb;
 //----------------------------------------------------------------------
 // ExceptionHandler
@@ -138,12 +140,17 @@ int doFork(int functionAddr)
     // 4. Create a new thread for the child and set its addrSpace
     // childThread = new Thread("childThread")
     // child->space = childAddSpace;
+    Thread *childThread;
+    childThread = new Thread("Forked Child Thread");
+    childThread->space = childAddrSpace;
+    printf("Child thread created and assigned new childAddrSpace!\n");
 
     // 5. Create a PCB for the child and connect it all up
     // pcb: pcbManager->AllocatePCB();
     // pcb->thread = childThread
     // set parent for child pcb
     // add child for parent pcb
+    PCB* childPCB = pcbManager->AllocatePCB();
 
     // 6. Set up machine registers for child and save it to child thread
     // PCReg: functionAddr

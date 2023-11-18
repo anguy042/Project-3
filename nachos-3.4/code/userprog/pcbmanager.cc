@@ -6,8 +6,12 @@ PCBManager::PCBManager(int maxProcesses)
 
     bitmap = new BitMap(maxProcesses);
     pcbs = new PCB *[maxProcesses];
-    //initializing the lock
-    pcbManagerLock = new Lock("PCBManagerLock");
+    //initializing the lock 
+    //KH Addition (Edit): Commenting this out because I think this needs
+    //to be declared in system.cc and system.h, like the memory manager lock.
+    //I have added that over there. That way it has a global scope.
+    //I think if we declare it here, it only exists in this function.
+    //pcbManagerLock = new Lock("PCBManagerLock");
     for (int i = 0; i < maxProcesses; i++)
     {
         pcbs[i] = NULL;
@@ -26,6 +30,7 @@ PCB *PCBManager::AllocatePCB()
 {
 
     // Aquire pcbManagerLock
+   
     pcbManagerLock->Acquire();
 
     int pid = bitmap->Find();
