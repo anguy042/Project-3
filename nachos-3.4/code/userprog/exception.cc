@@ -166,6 +166,19 @@ int doFork(int functionAddr)
     // NextPCReg: functionAddr+4
     // childThread->SaveUserState();
 
+    //I am not 100% sure on how to do this so I may need to
+    //contact a TA or ask for help if it doesn't work.
+    //However, since we previously saved the parent's state, 
+    //I think I can directly change these registers then save 
+    //them to the childThread...
+    machine->WriteRegister(PrevPCReg, functionAddr - 4);
+    machine->WriteRegister(PCReg, functionAddr);
+    machine->WriteRegister(NextPCReg, functionAddr + 4);
+    childThread->SaveUserState();
+    printf("PCRegs set and saved to childThread!\n");
+
+
+
     // 7. Restore register state of parent user-level process
     // currentThread->RestoreUserState()
 
@@ -173,7 +186,9 @@ int doFork(int functionAddr)
     // childThread->Fork(childFunction, pcb->pid)
 
     // 9. return pcb->pid;
-    return 0;
+    int childPID = childPCB->pid;
+    printf("Returning child PID: %d \n", childPID);
+    return childPID;
 }
 
 int doExec(char *filename)
