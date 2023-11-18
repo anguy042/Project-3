@@ -151,6 +151,14 @@ int doFork(int functionAddr)
     // set parent for child pcb
     // add child for parent pcb
     PCB* childPCB = pcbManager->AllocatePCB();
+    childPCB->thread = childThread;
+    //Parent can be set directly by accessing the property:
+    childPCB->parent = currentThread->space->pcb;
+    printf("Parent PCB of child set!\n");
+    //add child for parent pcb
+    currentThread->space->pcb->AddChild(childPCB);
+    printf("Child added to parent PCB children list!\n");
+
 
     // 6. Set up machine registers for child and save it to child thread
     // PCReg: functionAddr
