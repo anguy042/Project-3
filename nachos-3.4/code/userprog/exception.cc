@@ -91,9 +91,9 @@ void incrementPC()
 }
 
 void childFunction(int pid)
-{   //KH Addition:
-    //int PID = currentThread->space->pcb->pid;
-    printf("\nInside childFunction! \n");
+{   
+    //For testing:
+    printf("\nInside childFunction! PID: [%d]\n", pid);
 
    
     // 1. Restore the state of registers
@@ -106,11 +106,11 @@ void childFunction(int pid)
 
     // PCReg == machine->ReadRegister(PCReg)
     // print message for child creation (pid,  PCReg, currentThread->space->GetNumPages())
-    //Unless I am really missing something, the assignment instructions seem
-    //to indicate that the only print for Fork() says the PARENT id, not
-    //the child id. That is already included in doFork(). So I do not believe
-    //we need another printout here. 
+    
+    // n/a - no child creation print message given in
+    // project instructions
 
+    //for testing:
     printf("About to call machine->Run()!\n");
     machine->Run();
     // machine->Run();
@@ -118,8 +118,6 @@ void childFunction(int pid)
 
 int doFork(int functionAddr)
 {
-    //KH Addition: Working on implementing Fork(). So working on this whole
-    // area. 11.16.23
     printf("\nInside doFork()!\n");
 
     // 1. Check if sufficient memory exists to create new process
@@ -131,26 +129,20 @@ int doFork(int functionAddr)
     printf("System Call: [%d] invoked [Fork]\n", currPID);
     printf("Process [%d] Fork: start at address [%d] with [%d] pages memory\n", currPID, functionAddr, needed);
     //-----------------------------------------------------------------
-    printf("Parent thread id: %d has %d pages\n", currPID, needed);
     int avail = mm->GetFreePageCount();
-    printf("Machine has %d free pages.\n", avail);
     if(needed > avail){
-        printf("Not enough memory available. Returning -1.\n");
         return -1;
     }
-    //printf("Enough memory available!\n");
 
     // 2. SaveUserState for the parent thread
     // currentThread->SaveUserState();
     currentThread->SaveUserState();
-    //printf("Parent registers saved!\n");
 
     // 3. Create a new address space for child by copying parent address space
     // Parent: currentThread->space
     // childAddrSpace: new AddrSpace(currentThread->space)
     AddrSpace *childAddrSpace;
     childAddrSpace = new AddrSpace(currentThread->space);
-    //printf("Child AddrSpace created!\n");
 
     // 4. Create a new thread for the child and set its addrSpace
     // childThread = new Thread("childThread")
@@ -158,7 +150,6 @@ int doFork(int functionAddr)
     Thread *childThread;
     childThread = new Thread("Forked Child Thread");
     childThread->space = childAddrSpace;
-    //printf("Child thread created and assigned new childAddrSpace!\n");
 
     // 5. Create a PCB for the child and connect it all up
     // pcb: pcbManager->AllocatePCB();
@@ -167,12 +158,9 @@ int doFork(int functionAddr)
     // add child for parent pcb
     PCB* childPCB = pcbManager->AllocatePCB();
     childPCB->thread = childThread;
-    //Parent can be set directly by accessing the property:
     childPCB->parent = currentThread->space->pcb;
-    //printf("Parent PCB of child set!\n");
-    //add child for parent pcb
+
     currentThread->space->pcb->AddChild(childPCB);
-    //printf("Child added to parent PCB children list!\n");
 
 
     // 6. Set up machine registers for child and save it to child thread
@@ -186,9 +174,7 @@ int doFork(int functionAddr)
     machine->WriteRegister(PCReg, functionAddr);
     machine->WriteRegister(NextPCReg, functionAddr + 4);
     childThread->SaveUserState();
-    //printf("PCRegs set and saved to childThread!\n");
-
-
+   
 
     // 7. Restore register state of parent user-level process
     // currentThread->RestoreUserState()
@@ -197,7 +183,6 @@ int doFork(int functionAddr)
     // 8. Call thread->fork on Child
     // childThread->Fork(childFunction, pcb->pid)
     int childPID = childPCB->pid;
-    printf("About to call thread->fork()\n");
     childThread->Fork(childFunction, childPID);
     
 
@@ -208,7 +193,7 @@ int doFork(int functionAddr)
     
     // 9. return pcb->pid;
     
-    printf("Returning child PID: %d \n", childPID);
+    //printf("Returning child PID: %d \n", childPID);
     return childPID;
 }
 
