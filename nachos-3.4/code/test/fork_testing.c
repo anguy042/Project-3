@@ -12,6 +12,8 @@ int
 main()
 {
     Fork(myFunction);
+    Fork(myFunction);
+    Exit(5);
 
 
 

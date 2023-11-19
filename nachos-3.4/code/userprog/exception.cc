@@ -118,6 +118,7 @@ void childFunction(int pid)
 
 int doFork(int functionAddr)
 {
+    //For testing:
     printf("\nInside doFork()!\n");
 
     // 1. Check if sufficient memory exists to create new process
@@ -380,10 +381,11 @@ void ExceptionHandler(ExceptionType which)
     }
     else if ((which == SyscallException) && (type == SC_Fork))
     {
-        //KH Addition: adding printout for testing setup. 
-        printf("\n\nInside Fork option! Added by Kristy\n\n");
+      
         int ret = doFork(machine->ReadRegister(4));
-        printf("\nReturned from doFork()! Inside ExceptionHandler. \nAbout to return childpid %d\n", ret);
+        //for testing:
+        printf("\nReturned from doFork()! Inside ExceptionHandler. \n");
+        printf("About to return childpid %d\n", ret);
         machine->WriteRegister(2, ret);
         incrementPC();
     }

@@ -35,8 +35,8 @@ CPP = gcc -m32 -E
 INCDIR =-I../userprog -I../threads
 CFLAGS = -G 0 -c $(INCDIR)
 
-#KH Addition: adding fork_testing:
-all: create exit halt shell matmult sort fork_testing
+#KH Addition: adding fork_testing and fork
+all: create exit halt shell matmult sort fork_testing fork
 
 start.o: start.s ../userprog/syscall.h
 	$(CPP) $(CPPFLAGS) start.c > strt.s
@@ -86,3 +86,11 @@ fork_testing.o: fork_testing.c
 fork_testing: fork_testing.o start.o
 	$(LD) $(LDFLAGS) start.o fork_testing.o -o fork_testing.coff
 	../bin/coff2noff fork_testing.coff fork_testing
+
+#KH Addition: Adding fork from Canvas for testing
+fork.o: fork.c
+	$(CC) $(CFLAGS) -c fork.c
+fork: fork.o start.o
+	$(LD) $(LDFLAGS) start.o fork.o -o fork.coff
+	../bin/coff2noff fork.coff fork
+

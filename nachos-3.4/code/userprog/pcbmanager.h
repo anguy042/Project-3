@@ -23,8 +23,8 @@ private:
     BitMap *bitmap;
     PCB **pcbs;
     // Need a lock here
-    //KH Addition: commenting this out, see comment in .cc file
-    //Lock *pcbManagerLock;
+    
+    Lock *pcbManagerLock;
 };
 
 #endif // PCBMANAGER_H
