@@ -31,12 +31,10 @@ PCBManager::~PCBManager()
 PCB *PCBManager::AllocatePCB()
 {
 
-    //KH Addition: This is inside the pcbmanager code.
-    //I believe the lock should be acquired and released probably
-    //somewhere in exception.cc, like the memory manager lock.
-    //Maybe this works though, I'm not sure. I will not change it
-    //but something to consider if issues come up. 
-    // Aquire pcbManagerLock
+    //KH Addition: if this setup doesn't work,
+    // we may consider an implementation similar
+    // to the memory manager lock.
+    //Aquire pcbManagerLock
    
     pcbManagerLock->Acquire();
 

@@ -132,6 +132,9 @@ int doFork(int functionAddr)
     //-----------------------------------------------------------------
     int avail = mm->GetFreePageCount();
     if(needed > avail){
+        printf("Not enough memory.\n");
+        printf("Need %d pages.\n", needed);
+        printf("Machine only has %d \n", avail);
         return -1;
     }
 
@@ -163,6 +166,9 @@ int doFork(int functionAddr)
 
     currentThread->space->pcb->AddChild(childPCB);
 
+    //Give the child address space the new PCB:
+    childAddrSpace->pcb = childPCB;
+
 
     // 6. Set up machine registers for child and save it to child thread
     // PCReg: functionAddr
@@ -171,7 +177,7 @@ int doFork(int functionAddr)
     // childThread->SaveUserState();
 
     
-    machine->WriteRegister(PrevPCReg, 0);//see if changing to 0 helps
+    machine->WriteRegister(PrevPCReg, functionAddr - 4);//see if changing to 0 helps
     machine->WriteRegister(PCReg, functionAddr);
     machine->WriteRegister(NextPCReg, functionAddr + 4);
     childThread->SaveUserState();
@@ -316,6 +322,11 @@ int doKill(int pid)
 
 void doYield()
 {
+    //KH Addition: Adding printout statement for testing. We should
+    //be able to keep this actually if you haven't already added it
+    //to yours, Annie
+    int PID = currentThread->space->pcb->pid;
+    printf("System Call: [%d] invoked Yield.\n", PID);
     currentThread->Yield();
 }
 

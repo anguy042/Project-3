@@ -39,7 +39,7 @@ extern MemoryManager* mm;
 extern Lock* mmLock;
 extern PCBManager* pcbManager;
 //KH Addition:
-extern Lock* pcbManagerLock;
+//extern Lock* pcbManagerLock;
 #endif
 
 #ifdef FILESYS_NEEDED 		// FILESYS or FILESYS_STUB

@@ -34,7 +34,7 @@ MemoryManager* mm;
 Lock* mmLock;
 PCBManager* pcbManager;
 //KH Addition: declaring lock here: 
-Lock* pcbManagerLock;
+//Lock* pcbManagerLock;
 #endif
 
 #ifdef NETWORK

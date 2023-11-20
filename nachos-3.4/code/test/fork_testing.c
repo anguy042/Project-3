@@ -1,11 +1,11 @@
 //KH Addition: Creating this file for testing. 
 #include "syscall.h"
 
+int sum = 0;
+
 void myFunction(){
-    int i = 0;
-    while (i < 10){
-        i = i + 1;
-    }
+    sum = sum + 1;
+    Exit(sum);
 }
 
 int
@@ -13,7 +13,7 @@ main()
 {
     Fork(myFunction);
     Fork(myFunction);
-    Exit(5);
+    Exit(sum);
 
 
 
