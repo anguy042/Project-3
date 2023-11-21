@@ -159,7 +159,7 @@ Initialize(int argc, char **argv)
     mmLock = new Lock("mmLock");
     pcbManager = new PCBManager(MAX_PROCESSES);
     //KH Addition:
-    pcbManagerLock = new Lock("PCBManagerLock");
+    //pcbManagerLock = new Lock("PCBManagerLock");
 #endif
 
 #ifdef FILESYS
