@@ -263,8 +263,16 @@ int doJoin(int pid)
 {
 
     // 1. Check if this is a valid pid and return -1 if not
-    PCB *joinPCB = pcbManager->GetPCB(pid);
+    PCB* joinPCB = pcbManager->GetPCB(pid);
+    
+    printf("System Call: [%d] invoked [Join]\n", currentThread->space->pcb->pid);
+
     if (pid <= 0)
+    {
+        return -1;
+    }
+
+    if(joinPCB == NULL)
     {
         return -1;
     }
