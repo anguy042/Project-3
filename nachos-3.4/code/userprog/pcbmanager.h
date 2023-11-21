@@ -23,6 +23,7 @@ private:
     BitMap *bitmap;
     PCB **pcbs;
     // Need a lock here
+    
     Lock *pcbManagerLock;
 };
 

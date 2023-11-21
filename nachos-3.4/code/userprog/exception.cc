@@ -25,6 +25,8 @@
 #include "system.h"
 #include "syscall.h"
 #include "system.h"
+//KH Addition
+#include "pcb.h"
 class pcb;
 //----------------------------------------------------------------------
 // ExceptionHandler
@@ -51,8 +53,9 @@ class pcb;
 
 void doExit(int status)
 {
-
-    int pid = 99;
+    //KH Addition: Just going to add this so I can see both
+    //forked processes exiting hopefully:
+    int pid = currentThread->space->pcb->pid;
 
     printf("System Call: [%d] invoked [Exit]\n", pid);
     printf("Process [%d] exits with [%d]\n", pid, status);
@@ -68,6 +71,12 @@ void doExit(int status)
     // Manage PCB memory As a child process
     if (pcb->parent == NULL)
         pcbManager->DeallocatePCB(pcb);
+
+    //KH Addition: We need to deallocate the process PCB itself no?
+    //If anything breaks this may be the issue, but I think doExit()
+    //is the logical place for this and it is needed because my
+    //Forking functions are not releasing their memory afterward. 
+
 
     // Delete address space only after use is completed
     delete currentThread->space;
@@ -88,43 +97,83 @@ void incrementPC()
 }
 
 void childFunction(int pid)
-{
+{   
+    //For testing:
+    //printf("\nInside childFunction! PID: [%d]\n", pid);
 
+   
     // 1. Restore the state of registers
     // currentThread->RestoreUserState()
+    currentThread->RestoreUserState();
 
     // 2. Restore the page table for child
     // currentThread->space->RestoreState()
+    currentThread->space->RestoreState();
 
     // PCReg == machine->ReadRegister(PCReg)
     // print message for child creation (pid,  PCReg, currentThread->space->GetNumPages())
+    
+    // n/a - no child creation print message given in
+    // project instructions
 
+    //for testing:
+    //printf("About to call machine->Run()!\n");
+    machine->Run();
     // machine->Run();
 }
 
 int doFork(int functionAddr)
 {
-
+    
     // 1. Check if sufficient memory exists to create new process
     // currentThread->space->GetNumPages() <= mm->GetFreePageCount()
     // if check fails, return -1
+    int currPID = currentThread->space->pcb->pid;
+    int needed = currentThread->space->GetNumPages();
+    //------------------------These printouts are part of the assignment:
+    printf("System Call: [%d] invoked [Fork]\n", currPID);
+    printf("Process [%d] Fork: start at address [0x%x] with [%d] pages memory\n", currPID, functionAddr, needed);
+    //-----------------------------------------------------------------
+    int avail = mm->GetFreePageCount();
+    if(needed > avail){
+        //For testing:
+        //printf("Not enough memory.\n");
+        //printf("Need %d pages.\n", needed);
+        //printf("Machine only has %d \n", avail);
+        return -1;
+    }
 
     // 2. SaveUserState for the parent thread
     // currentThread->SaveUserState();
+    currentThread->SaveUserState();
 
     // 3. Create a new address space for child by copying parent address space
     // Parent: currentThread->space
     // childAddrSpace: new AddrSpace(currentThread->space)
+    AddrSpace *childAddrSpace;
+    childAddrSpace = new AddrSpace(currentThread->space);
 
     // 4. Create a new thread for the child and set its addrSpace
     // childThread = new Thread("childThread")
     // child->space = childAddSpace;
+    Thread *childThread;
+    childThread = new Thread("Forked Child Thread");
+    childThread->space = childAddrSpace;
 
     // 5. Create a PCB for the child and connect it all up
     // pcb: pcbManager->AllocatePCB();
     // pcb->thread = childThread
     // set parent for child pcb
     // add child for parent pcb
+    PCB* childPCB = pcbManager->AllocatePCB();
+    childPCB->thread = childThread;
+    childPCB->parent = currentThread->space->pcb;
+
+    currentThread->space->pcb->AddChild(childPCB);
+
+    //Give the child address space the new PCB:
+    childAddrSpace->pcb = childPCB;
+
 
     // 6. Set up machine registers for child and save it to child thread
     // PCReg: functionAddr
@@ -132,14 +181,34 @@ int doFork(int functionAddr)
     // NextPCReg: functionAddr+4
     // childThread->SaveUserState();
 
+    
+    machine->WriteRegister(PrevPCReg, functionAddr - 4);//see if changing to 0 helps
+    machine->WriteRegister(PCReg, functionAddr);
+    machine->WriteRegister(NextPCReg, functionAddr + 4);
+    childThread->SaveUserState();
+   
+
     // 7. Restore register state of parent user-level process
     // currentThread->RestoreUserState()
+    currentThread->RestoreUserState();
 
     // 8. Call thread->fork on Child
     // childThread->Fork(childFunction, pcb->pid)
+    int childPID = childPCB->pid;
+    childThread->Fork(childFunction, childPID);
+    
 
+    //Since we don't know if the child thread ran or not,
+    //I feel like we should restore the state again here.
+    //Now I do not believe this is necessary, however my code
+    //Is working and I do not want to change anything haha
+    currentThread->RestoreUserState();
+    currentThread->space->RestoreState();
+    
     // 9. return pcb->pid;
-    return 0;
+    
+    //printf("Returning child PID: %d \n", childPID);
+    return childPID;
 }
 
 int doExec(char *filename)
@@ -260,6 +329,11 @@ int doKill(int pid)
 
 void doYield()
 {
+    //KH Addition: Adding printout statement for testing. We should
+    //be able to keep this actually if you haven't already added it
+    //to yours, Annie
+    int PID = currentThread->space->pcb->pid;
+    printf("System Call: [%d] invoked Yield.\n", PID);
     currentThread->Yield();
 }
 
@@ -325,7 +399,11 @@ void ExceptionHandler(ExceptionType which)
     }
     else if ((which == SyscallException) && (type == SC_Fork))
     {
+      
         int ret = doFork(machine->ReadRegister(4));
+        //for testing:
+        //printf("Returned from doFork()! Inside ExceptionHandler. \n");
+        //printf("About to return childpid %d\n", ret);
         machine->WriteRegister(2, ret);
         incrementPC();
     }

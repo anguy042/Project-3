@@ -198,6 +198,17 @@ AddrSpace::AddrSpace(AddrSpace* space) {
 
 AddrSpace::~AddrSpace()
 {
+    //KH Addition: Can we deallocate the pages here?
+    unsigned int i;
+    for (i = 0; i < numPages; i++) {
+           
+            int test = mm->DeallocatePage(pageTable[i].physicalPage);
+            if(test == -1){
+                printf("Failed to deallocate page\n");
+            }
+
+        }
+
    delete pageTable;
 }
 
