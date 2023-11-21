@@ -199,7 +199,7 @@ AddrSpace::AddrSpace(AddrSpace* space) {
 AddrSpace::~AddrSpace()
 {
     //KH Addition: Can we deallocate the pages here?
-    int i;
+    unsigned int i;
     for (i = 0; i < numPages; i++) {
            
             int test = mm->DeallocatePage(pageTable[i].physicalPage);

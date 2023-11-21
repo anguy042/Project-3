@@ -99,7 +99,7 @@ void incrementPC()
 void childFunction(int pid)
 {   
     //For testing:
-    printf("\nInside childFunction! PID: [%d]\n", pid);
+    //printf("\nInside childFunction! PID: [%d]\n", pid);
 
    
     // 1. Restore the state of registers
@@ -117,16 +117,14 @@ void childFunction(int pid)
     // project instructions
 
     //for testing:
-    printf("About to call machine->Run()!\n");
+    //printf("About to call machine->Run()!\n");
     machine->Run();
     // machine->Run();
 }
 
 int doFork(int functionAddr)
 {
-    //For testing:
-    //printf("\nInside doFork()!\n");
-
+    
     // 1. Check if sufficient memory exists to create new process
     // currentThread->space->GetNumPages() <= mm->GetFreePageCount()
     // if check fails, return -1
@@ -138,9 +136,10 @@ int doFork(int functionAddr)
     //-----------------------------------------------------------------
     int avail = mm->GetFreePageCount();
     if(needed > avail){
-        printf("Not enough memory.\n");
-        printf("Need %d pages.\n", needed);
-        printf("Machine only has %d \n", avail);
+        //For testing:
+        //printf("Not enough memory.\n");
+        //printf("Need %d pages.\n", needed);
+        //printf("Machine only has %d \n", avail);
         return -1;
     }
 
@@ -201,6 +200,8 @@ int doFork(int functionAddr)
 
     //Since we don't know if the child thread ran or not,
     //I feel like we should restore the state again here.
+    //Now I do not believe this is necessary, however my code
+    //Is working and I do not want to change anything haha
     currentThread->RestoreUserState();
     currentThread->space->RestoreState();
     
