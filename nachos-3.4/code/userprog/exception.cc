@@ -72,6 +72,12 @@ void doExit(int status)
     if (pcb->parent == NULL)
         pcbManager->DeallocatePCB(pcb);
 
+    //KH Addition: We need to deallocate the process PCB itself no?
+    //If anything breaks this may be the issue, but I think doExit()
+    //is the logical place for this and it is needed because my
+    //Forking functions are not releasing their memory afterward. 
+
+
     // Delete address space only after use is completed
     delete currentThread->space;
 
@@ -119,7 +125,7 @@ void childFunction(int pid)
 int doFork(int functionAddr)
 {
     //For testing:
-    printf("\nInside doFork()!\n");
+    //printf("\nInside doFork()!\n");
 
     // 1. Check if sufficient memory exists to create new process
     // currentThread->space->GetNumPages() <= mm->GetFreePageCount()
@@ -128,7 +134,7 @@ int doFork(int functionAddr)
     int needed = currentThread->space->GetNumPages();
     //------------------------These printouts are part of the assignment:
     printf("System Call: [%d] invoked [Fork]\n", currPID);
-    printf("Process [%d] Fork: start at address [%d] with [%d] pages memory\n", currPID, functionAddr, needed);
+    printf("Process [%d] Fork: start at address [0x%x] with [%d] pages memory\n", currPID, functionAddr, needed);
     //-----------------------------------------------------------------
     int avail = mm->GetFreePageCount();
     if(needed > avail){
@@ -395,8 +401,8 @@ void ExceptionHandler(ExceptionType which)
       
         int ret = doFork(machine->ReadRegister(4));
         //for testing:
-        printf("\nReturned from doFork()! Inside ExceptionHandler. \n");
-        printf("About to return childpid %d\n", ret);
+        //printf("Returned from doFork()! Inside ExceptionHandler. \n");
+        //printf("About to return childpid %d\n", ret);
         machine->WriteRegister(2, ret);
         incrementPC();
     }

@@ -24,7 +24,8 @@ PCBManager::~PCBManager()
 {
 
     delete bitmap;
-
+    //KH Addition: Discussed with Jose :)
+    delete pcbManagerLock;
     delete pcbs;
 }
 
@@ -57,6 +58,11 @@ int PCBManager::DeallocatePCB(PCB *pcb)
 
     // Aquire pcbManagerLock
     pcbManagerLock->Acquire();
+    //KH Addition: I believe this would be where we should 
+    //have the memory manager deallocate the pages. 
+    //Wait, maybe this will work if I put it in the address space deallocator
+    //pageTable = pcb->thread->space->GetPageTable();
+
 
     bitmap->Clear(pcb->pid);
 
