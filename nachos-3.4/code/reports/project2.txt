@@ -7,10 +7,10 @@ PROJECT 2
 
 Our code design starts from the professor's provided repository, and follows 
 the instructions and directions he provides in his videos. We also began with
-plenty of time and had were grateful to receive guidance from the TAs Jose
+plenty of time and were grateful to receive guidance from the TAs Jose
 and Fernando.
 
-The test files fork.c, join.c, kill.c, exit.c are included, have been added
-to the makefile in the test directory. They are ready to be compiled and run.
+The test files fork.c, exec.c, join.c, kill.c, exit.c are included, and have been 
+added to the makefile in the test directory. They are ready to be compiled and run.
 
-fork(), join(), and kill() seem to work as expected. 
+fork(), exec(), join(), and kill() seem to work as expected.  
