@@ -56,6 +56,33 @@ int PCBManager::DeallocatePCB(PCB *pcb)
 
     // Check is pcb is valid -- check pcbs for pcb->pid
 
+    //KH Addition: I actually do not think this is necessary.
+    //This function is only called from within doExit() and
+    //from within DeleteExitedChildrenSetParentNull(). 
+    //However, we can add a sanity check by checking if the passed
+    //PCB is in the bitmap.
+    //If the PCB was invalid we wouldn't expit pcb->pid to work right?
+    if(pcb == NULL){
+        return -1;
+    }else{
+
+        int pid = pcb->pid;
+        if(pid <0 ){
+            //This should never execute....
+            //but we should always check before
+            //calling the bitmap functions that use
+            //ASSERT statements to check the range.
+            return -1;
+        }
+        bool valid = bitmap->Test(pid);
+        if(!valid){
+            printf("Trying to deallocate PCB that is not in pcbs[].\n");
+            return -1;
+        }
+        //If valid = true, proceed. 
+
+    }
+
     // Aquire pcbManagerLock
     pcbManagerLock->Acquire();
     //KH Addition: I believe this would be where we should 

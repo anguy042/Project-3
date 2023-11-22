@@ -69,16 +69,34 @@ void doExit(int status)
     pcb->DeleteExitedChildrenSetParentNull();
 
     // Manage PCB memory As a child process
-    if (pcb->parent == NULL)
+    if (pcb->parent == NULL){
+        //printf("No parent. Deallocating current PCB.\n");
+         pcbManager->DeallocatePCB(pcb);
+    } else{
+        //KH Addition: I see a potential problem here with the prof's
+        //pseudocode. In the original pseudocode, it looks
+        //like we are only deallocating the pcb if the parent is null.
+        //If the parent is not null, we would want to fix the children list
+        //and then still deallocate the PCB, no? I will put that in
+        //here in an else statement.
+        //For testing:
+        //printf("Parent not null. Removing process from parent's children list.\n");
+        
+        PCB* parentPCB = pcb->parent;
+        parentPCB->RemoveChild(pcb);
+
+        //Now still deallocate:
+        //printf("Deallocating current PCB.\n");
         pcbManager->DeallocatePCB(pcb);
 
-    //KH Addition: We need to deallocate the process PCB itself no?
-    //If anything breaks this may be the issue, but I think doExit()
-    //is the logical place for this and it is needed because my
-    //Forking functions are not releasing their memory afterward. 
-
+    }
 
     // Delete address space only after use is completed
+
+    //KH Note: This line should cause the pages to be freed because it causes
+    //the addrspace deconstructor to be called. Therefore, even if PCB's are still
+    //allocated to certain PID's because their children have not exited or something
+    //like that, the pages should be free, allowing the system to create more processes.
     delete currentThread->space;
 
     // Finish current thread only after all the cleanup is done
@@ -130,19 +148,19 @@ int doFork(int functionAddr)
     // if check fails, return -1
     int currPID = currentThread->space->pcb->pid;
     int needed = currentThread->space->GetNumPages();
-    //------------------------These printouts are part of the assignment:
+    
     printf("System Call: [%d] invoked [Fork]\n", currPID);
-    printf("Process [%d] Fork: start at address [0x%x] with [%d] pages memory\n", currPID, functionAddr, needed);
-    //-----------------------------------------------------------------
+   
     int avail = mm->GetFreePageCount();
     if(needed > avail){
         //For testing:
         //printf("Not enough memory.\n");
         //printf("Need %d pages.\n", needed);
         //printf("Machine only has %d \n", avail);
+        printf("Process [%d] Fork: Not Enough memory available for child process.\n", currPID);
         return -1;
     }
-
+    printf("Process [%d] Fork: start at address [0x%x] with [%d] pages memory\n", currPID, functionAddr, needed);
     // 2. SaveUserState for the parent thread
     // currentThread->SaveUserState();
     currentThread->SaveUserState();
@@ -261,8 +279,12 @@ int doExec(char *filename)
 
 int doJoin(int pid)
 {
-
+    int currentPID = currentThread->space->pcb->pid;
     // 1. Check if this is a valid pid and return -1 if not
+
+    //KH addition for testing:
+    printf("Process [%d] invoked Join on process [%d]\n", currentPID, pid);
+
     PCB* joinPCB = pcbManager->GetPCB(pid);
     
     printf("System Call: [%d] invoked [Join]\n", currentThread->space->pcb->pid);

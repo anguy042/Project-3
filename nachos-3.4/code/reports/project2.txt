@@ -1,0 +1,16 @@
+COP4610 Fall 2023
+Group 15
+Kristy Hamlin, Annie Nguyen, Trang Tran
+
+
+PROJECT 2
+
+Our code design starts from the professor's provided repository, and follows 
+the instructions and directions he provides in his videos. We also began with
+plenty of time and had were grateful to receive guidance from the TAs Jose
+and Fernando.
+
+The test files fork.c, join.c, kill.c, exit.c are included, have been added
+to the makefile in the test directory. They are ready to be compiled and run.
+
+fork(), join(), and kill() seem to work as expected. 
