@@ -88,6 +88,9 @@ AddrSpace::AddrSpace(OpenFile *executable)
         return;
     }
 
+    //KH Addition: Printout statement for loading user program.
+    printf("Loaded Program: [%d] code | [%d] data | [%d] bss\n", noffH.code.size, noffH.initData.size, noffH.uninitData.size);
+
     // Allocate a new PCB for the address space
     pcb = pcbManager->AllocatePCB();
     pcb->thread = currentThread;
