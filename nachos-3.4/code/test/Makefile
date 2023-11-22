@@ -37,7 +37,7 @@ CFLAGS = -G 0 -c $(INCDIR)
 
 
 #KH Addition: adding fork_testing and fork
-all: create exit halt shell matmult sort fork_testing fork join kill
+all: create exit halt shell matmult sort fork_testing fork join kill exec memory
 
 
 start.o: start.s ../userprog/syscall.h
@@ -103,9 +103,20 @@ join: join.o start.o
 	$(LD) $(LDFLAGS) start.o join.o -o join.coff
 	../bin/coff2noff join.coff join
 
-kill: kill.c
+kill.o: kill.c
 	$(CC) $(CFLAGS) -c kill.c
 kill: kill.o start.o
 	$(LD) $(LDFLAGS) start.o kill.o -o kill.coff
 	../bin/coff2noff kill.coff kill
 
+exec.o: exec.c
+	$(CC) $(CFLAGS) -c exec.c
+exec: exec.o start.o
+	$(LD) $(LDFLAGS) start.o exec.o -o exec.coff
+	../bin/coff2noff exec.coff exec 
+
+memory.o: memory.c
+	$(CC) $(CFLAGS) -c memory.c
+memory: memory.o start.o
+	$(LD) $(LDFLAGS) start.o memory.o -o memory.coff
+	../bin/coff2noff memory.coff memory 
