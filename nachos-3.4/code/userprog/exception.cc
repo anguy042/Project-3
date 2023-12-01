@@ -442,6 +442,17 @@ OpenFileId doOpen(char *fileName)
     return openFileId;
 }
 
+void doWrite(char *buffer, int size, OpenFileId id){
+    printf("Syscall Call: [%d] invoked Write.\n", currentThread->space->pcb->pid);
+    printf(buffer);
+}
+
+int doRead(char *buffer, int size, OpenFileId id){
+    printf("Syscall Call: [%d] invoked Read.\n", currentThread->space->pcb->pid);
+
+}
+
+
 void ExceptionHandler(ExceptionType which)
 {
     int type = machine->ReadRegister(2);
@@ -510,6 +521,28 @@ void ExceptionHandler(ExceptionType which)
         int virtAddr = machine->ReadRegister(4);
         char *fileName = readString(virtAddr);
         doClose(fileName);
+        incrementPC();
+    }
+    else if ((which == SyscallException) && (type == SC_Read))
+    {
+        int virtAddr4 = machine->ReadRegister(4);
+        int virtAddr5 = machine->ReadRegister(5);
+        int virtAddr6 = machine->ReadRegister(6);
+        char *buffer = readString(virtAddr4);
+        int size = readString(virtAddr5);
+        int id = readString(virtAddr6);
+        doRead(buffer, size, id);
+        incrementPC();
+    }
+    else if ((which == SyscallException) && (type == SC_Write))
+    {
+       int virtAddr4 = machine->ReadRegister(4);
+        int virtAddr5 = machine->ReadRegister(5);
+        int virtAddr6 = machine->ReadRegister(6);
+        char *buffer = readString(virtAddr4);
+        int size = readString(virtAddr5);
+        int id = readString(virtAddr6);
+        doWrite(buffer, size, id);
         incrementPC();
     }
     else
