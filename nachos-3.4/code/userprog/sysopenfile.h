@@ -5,7 +5,6 @@
 #include "openfile.h"
 
 class SysOpenFile {
-
     public:
         SysOpenFile(OpenFile *openFile, int fileID, char *fileName);
         ~SysOpenFile();

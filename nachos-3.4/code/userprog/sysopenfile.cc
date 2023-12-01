@@ -1,7 +1,6 @@
-#include "pcb.h"
+#include "sysopenfile.h"
 
-
-SysOpenFile::SysOpenFile(int fileID,char *fileName) {
+SysOpenFile::SysOpenFile(OpenFile *openFile, int fileID,char *fileName) {
     openFile = openFile
     fileID = id;
     fileName = fileName;
