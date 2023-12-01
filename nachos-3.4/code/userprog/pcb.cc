@@ -52,7 +52,7 @@ void PCB::DeleteExitedChildrenSetParentNull() {
     children->Mapcar(decspn);
 }
 
-SysOpenFile FindOpenFile(char *fileName){
-    //NEED TO IMPLEMENT
-    return new SysOpenFile();
-}
+// SysOpenFile FindOpenFile(char *fileName){
+//     //NEED TO IMPLEMENT
+//     return new SysOpenFile();
+// }
