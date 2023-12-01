@@ -54,5 +54,5 @@ void PCB::DeleteExitedChildrenSetParentNull() {
 
 SysOpenFile FindOpenFile(char *fileName){
     //NEED TO IMPLEMENT
-    return;
+    return new SysOpenFile();
 }
