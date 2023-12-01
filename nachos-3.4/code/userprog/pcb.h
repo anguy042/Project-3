@@ -3,6 +3,7 @@
 
 #include "list.h"
 #include "pcbmanager.h"
+#include "sysopenfile.h"
 
 class Thread;
 class PCBManager;
