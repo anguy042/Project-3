@@ -120,3 +120,15 @@ memory.o: memory.c
 memory: memory.o start.o
 	$(LD) $(LDFLAGS) start.o memory.o -o memory.coff
 	../bin/coff2noff memory.coff memory 
+
+cp.o: cp.c
+	$(CC) $(CFLAGS) -c cp.c
+cp: cp.o start.o
+	$(LD) $(LDFLAGS) start.o cp.o -o cp.coff
+	../bin/coff2noff cp.coff cp 
+
+concurrentRead.o: concurrentRead.c
+	$(CC) $(CFLAGS) -c concurrentRead.c
+concurrentRead: concurrentRead.o start.o
+	$(LD) $(LDFLAGS) start.o concurrentRead.o -o concurrentRead.coff
+	../bin/coff2noff concurrentRead.coff concurrentRead 

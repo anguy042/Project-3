@@ -22,6 +22,7 @@ class PCB {
         int RemoveChild(PCB* pcb);
         bool HasExited();
         void DeleteExitedChildrenSetParentNull();
+        SysOpenFile* FindOpenFile(char *fileName);
 
     private:
         List* children;

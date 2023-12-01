@@ -426,6 +426,22 @@ void doCreate(char *fileName)
     fileSystem->Create(fileName, 0);
 }
 
+OpenFileId doOpen(char *fileName)
+{
+    printf("Syscall Call: [%d] invoked Open.\n", currentThread->space->pcb->pid);
+
+    OpenFileId openFileId = fileSystem->Open(fileName);
+    
+    // SysOpenFile* file = currentThread->space->pcb->FindOpenFile(fileName)
+    //if(file){
+    //     file->userOpens++;
+    // }
+    // else{
+    //     new SysOpenFile(openFileId, 0, fileName);
+    // }
+    return openFileId;
+}
+
 void ExceptionHandler(ExceptionType which)
 {
     int type = machine->ReadRegister(2);
@@ -480,6 +496,20 @@ void ExceptionHandler(ExceptionType which)
         int virtAddr = machine->ReadRegister(4);
         char *fileName = readString(virtAddr);
         doCreate(fileName);
+        incrementPC();
+    }
+    else if ((which == SyscallException) && (type == SC_Open))
+    {
+        int virtAddr = machine->ReadRegister(4);
+        char *fileName = readString(virtAddr);
+        doOpen(fileName);
+        incrementPC();
+    }
+    else if ((which == SyscallException) && (type == SC_Close))
+    {
+        int virtAddr = machine->ReadRegister(4);
+        char *fileName = readString(virtAddr);
+        doClose(fileName);
         incrementPC();
     }
     else
