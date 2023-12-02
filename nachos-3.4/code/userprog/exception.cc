@@ -536,8 +536,8 @@ void ExceptionHandler(ExceptionType which)
         int virtAddr5 = machine->ReadRegister(5);
         int virtAddr6 = machine->ReadRegister(6);
         char *buffer = readString(virtAddr4);
-        int size = readString(virtAddr5);
-        int id = readString(virtAddr6);
+        int size = atoi(readString(virtAddr5)[2]);
+        int id = atoi(readString(virtAddr6)[2]);
         doRead(buffer, size, id);
         incrementPC();
     }
@@ -547,8 +547,8 @@ void ExceptionHandler(ExceptionType which)
         int virtAddr5 = machine->ReadRegister(5);
         int virtAddr6 = machine->ReadRegister(6);
         char *buffer = readString(virtAddr4);
-        int size = readString(virtAddr5);
-        int id = readString(virtAddr6);
+        int size = atoi(readString(virtAddr5)[2]);
+        int id = atoi(readString(virtAddr6)[2]);
         doWrite(buffer, size, id);
         incrementPC();
     }
