@@ -456,7 +456,8 @@ void doWrite(char *buffer, int size, OpenFileId id){
 
 int doRead(char *buffer, int size, OpenFileId id){
     printf("Syscall Call: [%d] invoked Read.\n", currentThread->space->pcb->pid);
-    return buffer[0];
+    buffer[0] = getchar();
+    return 0;
 }
 
 
