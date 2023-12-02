@@ -27,6 +27,7 @@
 #include "system.h"
 //KH Addition
 #include "pcb.h"
+#include "openfile.h"
 class pcb;
 //----------------------------------------------------------------------
 // ExceptionHandler
@@ -420,6 +421,12 @@ char *readString(int virtualAddr)
     return str;
 }
 
+void doClose(char *fileName)
+{
+    printf("Syscall Call: [%d] invoked Close.\n", currentThread->space->pcb->pid);
+    fileSystem->Create(fileName, 0);
+}
+
 void doCreate(char *fileName)
 {
     printf("Syscall Call: [%d] invoked Create.\n", currentThread->space->pcb->pid);
@@ -430,7 +437,7 @@ OpenFileId doOpen(char *fileName)
 {
     printf("Syscall Call: [%d] invoked Open.\n", currentThread->space->pcb->pid);
 
-    OpenFileId openFileId = fileSystem->Open(fileName);
+    OpenFile* openFile = fileSystem->Open(fileName);
     
     // SysOpenFile* file = currentThread->space->pcb->FindOpenFile(fileName)
     //if(file){
@@ -439,7 +446,7 @@ OpenFileId doOpen(char *fileName)
     // else{
     //     new SysOpenFile(openFileId, 0, fileName);
     // }
-    return openFileId;
+    return 0;
 }
 
 void doWrite(char *buffer, int size, OpenFileId id){
@@ -449,7 +456,7 @@ void doWrite(char *buffer, int size, OpenFileId id){
 
 int doRead(char *buffer, int size, OpenFileId id){
     printf("Syscall Call: [%d] invoked Read.\n", currentThread->space->pcb->pid);
-
+    return 0;
 }
 
 
