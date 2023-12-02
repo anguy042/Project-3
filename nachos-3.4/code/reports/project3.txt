@@ -18,3 +18,6 @@ We added the Open(), Close(), Read() and Write() functons to exception.cc but we
 able to finish the implementations.
 
 The source code can compile and we are able to run the tests.
+
+From the folder userprog, you can call 'make nachos' and 'nachos -x ../test/cp' to run
+the test with the latest updates
