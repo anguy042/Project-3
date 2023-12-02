@@ -1,0 +1,20 @@
+COP4610 Fall 2023
+Group 15
+Kristy Hamlin, Annie Nguyen, Trang Tran
+
+
+PROJECT 3
+
+Our code design follows the instructions and directions he provides in the 
+professor and TA videos.
+
+The test files cp.c, is included, and have been 
+added to the makefile in the test directory. They are ready to be compiled and run.
+
+We created the classes for UserOpenFile and SysOpen file and started but not finished 
+modifing PCB to contain an array of OpenUserFiles.
+
+We added the Open(), Close(), Read() and Write() functons to exception.cc but we were not
+able to finish the implementations.
+
+The source code can compile and we are able to run the tests.
