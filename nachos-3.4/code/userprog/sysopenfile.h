@@ -6,7 +6,7 @@
 
 class SysOpenFile {
     public:
-        SysOpenFile(OpenFile *openFile, int fileID, char *fileName);
+        SysOpenFile(OpenFile *openFileInput, int id,char *fileNameInput);
         ~SysOpenFile();
         OpenFile *openFile;
         int fileID;

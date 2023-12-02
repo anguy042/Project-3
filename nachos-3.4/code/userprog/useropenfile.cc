@@ -1,7 +1,7 @@
 #include "useropenfile.h"
 
-UserOpenFile::UserOpenFile(SysOpenFile *sysOpenFile, int fileID, char *fileName) {
-    openFile = openFile
-    fileID = id;
-    fileName = fileName;
+UserOpenFile::UserOpenFile(SysOpenFile *sysOpenFileInput, int offsetInput, char *fileNameInput) {
+    sysOpenFile = sysOpenFileInput
+    offset = offsetInput;
+    fileName = fileNameInput;
 }

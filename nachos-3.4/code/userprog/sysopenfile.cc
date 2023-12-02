@@ -1,7 +1,7 @@
 #include "sysopenfile.h"
 
-SysOpenFile::SysOpenFile(OpenFile *openFile, int fileID,char *fileName) {
-    openFile = openFile
+SysOpenFile::SysOpenFile(OpenFile *openFileInput, int id,char *fileNameInput) {
+    openFile = openFileInput
     fileID = id;
-    fileName = fileName;
+    fileName = fileNameInput;
 }

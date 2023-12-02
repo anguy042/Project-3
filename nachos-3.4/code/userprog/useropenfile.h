@@ -8,7 +8,7 @@
 class UserOpenFile {
 
     public:
-        UserOpenFile(SysOpenFile *sysOpenFile, int fileID, char *fileName);
+        UserOpenFile(SysOpenFile *sysOpenFileInput, int offsetInput, char *fileNameInput);
         ~UserOpenFile();
         SysOpenFile *sysOpenFile;
         int offset;
