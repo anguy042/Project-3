@@ -37,7 +37,7 @@ CFLAGS = -G 0 -c $(INCDIR)
 
 
 #KH Addition: adding fork_testing and fork
-all: create exit halt shell matmult sort fork_testing fork join kill exec memory
+all: create exit halt shell matmult sort fork_testing fork join kill exec cp memory
 
 
 start.o: start.s ../userprog/syscall.h
